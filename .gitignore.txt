@@ -1,0 +1,14 @@
+# Next.js (Frontend)
+client/node_modules/
+client/.next/
+client/out/
+
+# ASP.NET Core (Backend)
+server/bin/
+server/obj/
+server/.vs/
+
+# SQL Server
+database/*.bak
+database/*.mdf
+database/*.ldf
