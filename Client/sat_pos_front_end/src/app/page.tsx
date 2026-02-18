@@ -28,7 +28,50 @@ export default function PosPage() {
   const filteredProducts = useMemo(() => 
     products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.barcode.includes(searchTerm)),
     [searchTerm, products]
+
+    
   );
+
+  useEffect(() => {
+  let barcodeData = "";
+  let lastKeyTime = Date.now();
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    const currentTime = Date.now();
+    
+    
+    if (currentTime - lastKeyTime > 30) {
+      barcodeData = ""; 
+    }
+
+    if (e.key === "Enter") {
+      if (barcodeData.length > 3) {
+        
+        const product = products.find(p => p.barcode === barcodeData);
+        if (product) {
+          addToCart(product);
+          console.log("Scanned:", product.name);
+        } else {
+          alert("Product not found for barcode: " + barcodeData);
+        }
+        barcodeData = ""; 
+      }
+    } else {
+
+      if (e.key.length === 1) {
+        barcodeData += e.key;
+      }
+    }
+    
+    lastKeyTime = currentTime;
+  };
+
+  
+  window.addEventListener("keydown", handleKeyDown);
+
+  
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [products]); 
 
   const addToCart = (product: Product) => {
     if (product.stockQuantity <= 0) return alert("Out of Stock!");
